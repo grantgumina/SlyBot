@@ -68,23 +68,28 @@ class PokerBot:
 
         # data = "action_name=call" 
         # data = "action_name=" + action
-        r1 = random.randint(10)
-        if r1 < 3:
-            r = random.randint(20,100)
+        r1 = random.randint(1, 10)
+        if r1 < 4:
+            r = random.randint(200,400)
             bet = str(r)
-            if r == 100:
-                bet = "10000"
+            if r == 52:
+                bet = "100"
             print "Betting: " + bet
             data = "action_name=bet&amount=" + bet
             urllib2.urlopen(self.route + "action", data)
-        elif r1 < 5:
+        elif r1 < 10:
             data = "action_name=call"
             urllib2.urlopen(self.route + "action", data)
         else:
-            bet = "0"
-            print "Betting: " + bet
-            data = "action_name=bet&amount=" + bet
-            urllib2.urlopen(self.route + "action", data)
+            if self.game_state['current_bet'] > 30:
+                data = 'action_name=call'
+                print "calling"
+                urllib2.urlopen(self.route + "action", data)
+            else:
+                bet = "0"
+                print "Betting: " + bet
+                data = "action_name=bet&amount=" + bet
+                urllib2.urlopen(self.route + "action", data)
 
     def GetAction(self):
         hand = [Card(h) for h in self.game_state['hand']]
